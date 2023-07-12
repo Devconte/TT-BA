@@ -9,6 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import MenuItem from '@mui/material/MenuItem';
 import { useAppDispatch } from '../../../hooks/redux';
 import { updateProducts } from '../../../store/reducers/products';
+import { set } from 'mongoose';
 
 function ModalUpdate({ open, setOpen, id }) {
   const dispatch = useAppDispatch();
@@ -46,6 +47,12 @@ function ModalUpdate({ open, setOpen, id }) {
     };
     dispatch(updateProducts(payload));
     setOpen(false);
+    setName('');
+    setType('');
+    setPrice('');
+    setRating('');
+    setWarrantyYears('');
+    setAvailable('');
   };
   return (
     <div>

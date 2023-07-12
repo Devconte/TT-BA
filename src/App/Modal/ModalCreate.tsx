@@ -45,6 +45,12 @@ function ModalCreate({ open, setOpen }) {
     };
     dispatch(addProducts(payload));
     setOpen(false);
+    setName('');
+    setType('');
+    setPrice('');
+    setRating('');
+    setWarrantyYears('');
+    setAvailable('');
   };
   return (
     <div>

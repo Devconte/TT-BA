@@ -20,14 +20,13 @@ export const deleteProducts = createAsyncThunk(
     const { data } = await axios.delete(
       `http://localhost:3000/api/products/${id}`
     );
-    return data;
+    return id;
   }
 );
 
 export const addProducts = createAsyncThunk(
   'products/addProducts',
   async (payload) => {
-    console.log(payload);
     const { data } = await axios.post(
       `http://localhost:3000/api/products`,
       payload.json,
@@ -58,16 +57,33 @@ const productReducer = createReducer(initialState, (builder) => {
       state.product = action.payload;
     })
     .addCase(fetchProducts.rejected, (state) => {
-      state.alert = { type: 'error', message: 'Problème avec la BDD' };
+      state.alert = { type: 'error', message: 'Internal server error' };
     })
-    .addCase(deleteProducts.fulfilled, (state) => {
-      state.alert = { type: 'success', message: 'Produit supprimé' };
+    .addCase(deleteProducts.fulfilled, (state, action) => {
+      state.product = state.product.filter(
+        (product) => product._id !== action.payload
+      );
+      state.alert = {
+        type: 'success',
+        message: 'Product deleted from the list',
+      };
     })
-    .addCase(updateProducts.fulfilled, (state) => {
-      state.alert = { type: 'success', message: 'Produit mis à jour ' };
+
+    .addCase(updateProducts.fulfilled, (state, action) => {
+      // Trouver l'indice du produit dans le tableau.
+      const index = state.product.findIndex(
+        (product) => product._isd === action.payload._id
+      );
+      // Si le produit existe, le remplacer par le produit mis à jour.
+      if (index !== -1) {
+        state.product[index] = action.payload;
+      }
+      state.alert = { type: 'success', message: 'Product updated' };
     })
-    .addCase(addProducts.fulfilled, (state) => {
-      state.alert = { type: 'success', message: 'Produit ajouté' };
+
+    .addCase(addProducts.fulfilled, (state, action) => {
+      state.product = [...state.product, action.payload];
+      state.alert = { type: 'success', message: 'Product added to the list' };
     });
 });
 

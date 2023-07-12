@@ -24,10 +24,26 @@ export const deleteProducts = createAsyncThunk(
   }
 );
 
+export const addProducts = createAsyncThunk(
+  'products/addProducts',
+  async (payload) => {
+    console.log(payload);
+    const { data } = await axios.post(
+      `http://localhost:3000/api/products`,
+      payload.json,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    return data;
+  }
+);
+
 export const updateProducts = createAsyncThunk(
   `products/updateProducts`,
   async (payload) => {
-    console.log(payload.json);
     const { data } = await axios.put(
       `http://localhost:3000/api/products/${payload.id}`,
       payload.json
@@ -49,6 +65,9 @@ const productReducer = createReducer(initialState, (builder) => {
     })
     .addCase(updateProducts.fulfilled, (state) => {
       state.alert = { type: 'success', message: 'Produit mis à jour ' };
+    })
+    .addCase(addProducts.fulfilled, (state) => {
+      state.alert = { type: 'success', message: 'Produit ajouté' };
     });
 });
 

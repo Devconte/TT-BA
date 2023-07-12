@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 
 function Product() {
   const [open, setOpen] = useState(false);
+
   const [currentId, setCurrentId] = useState('');
   const dispatch = useAppDispatch();
   const products = useAppSelector((state) => state.products.product);

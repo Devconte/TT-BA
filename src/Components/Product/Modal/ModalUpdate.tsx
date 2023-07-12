@@ -1,4 +1,4 @@
-import { useState }from 'react';
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -7,38 +7,53 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import MenuItem from '@mui/material/MenuItem';
+import { useAppDispatch } from '../../../hooks/redux';
+import { updateProducts } from '../../../store/reducers/products';
 
-function ModalUpdate({open, setOpen}) {
+function ModalUpdate({ open, setOpen, id }) {
+  const dispatch = useAppDispatch();
+
   const productType = [
     {
       model: 'Phone',
-    value: 'Phone'}, 
+      value: 'Phone',
+    },
 
-     { model: 'Tablet',
-     value: 'Tablet'
-    },
-    { model: 'Computer',
-    value: 'Computer'
-    },
+    { model: 'Tablet', value: 'Tablet' },
+    { model: 'Computer', value: 'Computer' },
   ];
 
-const [name, setName] = useState('');
-const [type, setType] = useState('');
-const [price, setPrice] =useState('');
-const [rating, setRating] = useState('');
-const [warranty_years, setWarranty_years] = useState('');
-const [available, setAvailable] = useState('');
-  
-const handleSubmit = (event) => {event.preventDefault()};
+  const [name, setName] = useState('');
+  const [type, setType] = useState('');
+  const [price, setPrice] = useState('');
+  const [rating, setRating] = useState('');
+  const [warrantyYears, setWarrantyYears] = useState('');
+  const [available, setAvailable] = useState('');
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const payload = {
+      json: {
+        name,
+        type,
+        price,
+        rating,
+        warranty_years: warrantyYears,
+        available,
+      },
+      id,
+    };
+    dispatch(updateProducts(payload));
+    setOpen(false);
+  };
   return (
     <div>
-      
-      <Dialog open={open} onClose={()=> setOpen(!open)}>
-        <DialogTitle>Subscribe</DialogTitle>
+      <Dialog open={open} onClose={() => setOpen(!open)}>
+        <DialogTitle>Product details</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To subscribe to this website, please enter your email address here. We
-            will send updates occasionally.
+            Please update your products details
           </DialogContentText>
           <TextField
             autoFocus
@@ -48,66 +63,75 @@ const handleSubmit = (event) => {event.preventDefault()};
             type="name"
             fullWidth
             variant="standard"
-            onChange={(event) => setName(event.target.value) }
+            onChange={(event) => setName(event.target.value)}
             value={name}
           />
-            <TextField sx={{mt: 3}}
-          id="model"
-          select
-          label="Select"
-          defaultValue="EUR"
-          helperText="Please select the product type"
-        >{productType.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-          {option.model}
-        </MenuItem>
+          <TextField
+            sx={{ mt: 3 }}
+            id="model"
+            select
+            label="Select"
+            defaultValue="Phone"
+            helperText="Please select the product type"
+            onChange={(event) => setType(event.target.value)}
+            value={type}
+          >
+            {productType.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.model}
+              </MenuItem>
             ))}
-      </TextField>
-           <TextField
+          </TextField>
+          <TextField
             autoFocus
             margin="dense"
             id="price"
             label="price"
-            type="price"
+            type="number"
             fullWidth
             variant="standard"
+            onChange={(event) => setPrice(event.target.value)}
+            value={price}
           />
-           <TextField
+          <TextField
             autoFocus
             margin="dense"
             id="rating"
             label="Rating"
-            type="rating"
+            type="number"
             fullWidth
             variant="standard"
+            onChange={(event) => setRating(event.target.value)}
+            value={rating}
           />
-           <TextField
+          <TextField
             autoFocus
             margin="dense"
             id="warranty_years"
             label="Warranty years"
-            type="warranty years"
+            type="number"
             fullWidth
             variant="standard"
+            onChange={(event) => setWarrantyYears(event.target.value)}
+            value={warrantyYears}
           />
-    <TextField sx={{mt: 3}}
-          id="availability"
-          select
-          label="Select"
-          defaultValue="true"
-          helperText="Is the product available ?">
-            <MenuItem  value={true}>
-            Available
-          </MenuItem>
-          <MenuItem  value={false}>
-            Not available
-          </MenuItem>
-            
-              </TextField>
+          <TextField
+            sx={{ mt: 3 }}
+            id="availability"
+            select
+            label="Select"
+            defaultValue="true"
+            helperText="Is the product available ?"
+            onChange={(event) => setAvailable(event.target.value)}
+            value={available}
+          >
+            <MenuItem value={true}>Available</MenuItem>
+            <MenuItem value={false}>Not available</MenuItem>
+          </TextField>
         </DialogContent>
         <DialogActions>
-          <Button onClick={()=> setOpen(!open)}>Cancel</Button>
-          <Button onClick={()=> setOpen(!open)}>Subscribe</Button>
+          <Button onClick={() => setOpen(!open)}>Cancel</Button>
+          <Button onClick={handleSubmit}>Submit</Button>
         </DialogActions>
       </Dialog>
     </div>

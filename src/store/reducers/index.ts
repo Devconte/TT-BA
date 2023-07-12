@@ -1,4 +1,4 @@
-import productReducer from "./products";
+import productReducer from './products';
 
 const reducer = {
   products: productReducer,

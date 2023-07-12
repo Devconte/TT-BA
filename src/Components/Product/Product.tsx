@@ -1,5 +1,5 @@
+/* eslint-disable no-underscore-dangle */
 import { useState } from 'react';
-
 import {
   Avatar,
   ListItemAvatar,
@@ -14,14 +14,29 @@ import { deleteProducts } from '../../store/reducers/products';
 import ModalUpdate from './Modal/ModalUpdate';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 
+interface ProductType {
+  _id: string;
+  name: string;
+  type: string;
+  price: number;
+  warranty_years: number;
+  available: boolean;
+}
+
+interface ProductState {
+  product: ProductType[];
+}
+
 function Product() {
   const [open, setOpen] = useState(false);
 
   const [currentId, setCurrentId] = useState('');
   const dispatch = useAppDispatch();
-  const products = useAppSelector((state) => state.products.product);
+  const products = useAppSelector(
+    (state: ProductState) => state.products.product
+  );
 
-  const handleClickDelete = (id) => () => {
+  const handleClickDelete = (id: string) => () => {
     dispatch(deleteProducts(id));
   };
 
@@ -34,7 +49,7 @@ function Product() {
               <PhoneIphoneIcon />
             </Avatar>
           </ListItemAvatar>
-          <Stack spacing={2} direction={'row'} alignItems="center">
+          <Stack spacing={2} direction="row" alignItems="center">
             <Typography noWrap>
               <p>{item.name}</p>
             </Typography>
@@ -42,15 +57,14 @@ function Product() {
             <p style={{ width: '50px' }}>{item.price}</p>
             <p>{item.warranty_years}</p>
             {item.available ? (
-              <Button variant="outline">Buy</Button>
+              <Button variant="outlined">Buy</Button>
             ) : (
               <Button disabled>
-                {' '}
-                <DoNotDisturbAltIcon />{' '}
+                <DoNotDisturbAltIcon />
               </Button>
             )}
             <Button
-              variant="outline"
+              variant="outlined"
               onClick={() => {
                 setOpen(!open);
                 setCurrentId(item._id);
@@ -58,7 +72,7 @@ function Product() {
             >
               Update
             </Button>
-            <Button variant="outline" onClick={handleClickDelete(item._id)}>
+            <Button variant="outlined" onClick={handleClickDelete(item._id)}>
               Delete
             </Button>
           </Stack>

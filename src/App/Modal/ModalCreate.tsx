@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, MouseEvent } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -8,12 +8,22 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import MenuItem from '@mui/material/MenuItem';
 import { useAppDispatch } from '../../hooks/redux';
-import { addProducts, updateProducts } from '../../store/reducers/products';
+import { addProducts } from '../../store/reducers/products';
 
-function ModalCreate({ open, setOpen }) {
+interface ModalCreateProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+interface ProductType {
+  model: string;
+  value: string;
+}
+
+function ModalCreate({ open, setOpen }: ModalCreateProps) {
   const dispatch = useAppDispatch();
 
-  const productType = [
+  const productType: ProductType[] = [
     {
       model: 'Phone',
       value: 'Phone',
@@ -23,25 +33,25 @@ function ModalCreate({ open, setOpen }) {
     { model: 'Computer', value: 'Computer' },
   ];
 
-  const [name, setName] = useState('');
-  const [type, setType] = useState('');
-  const [price, setPrice] = useState('');
-  const [rating, setRating] = useState('');
-  const [warrantyYears, setWarrantyYears] = useState('');
-  const [available, setAvailable] = useState('');
+  const [name, setName] = useState<string>('');
+  const [type, setType] = useState<string>('');
+  const [price, setPrice] = useState<string>('');
+  const [rating, setRating] = useState<string>('');
+  const [warrantyYears, setWarrantyYears] = useState<string>('');
+  const [available, setAvailable] = useState<string>('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
     const payload = {
-      json: {
+      json: JSON.stringify({
         name,
         type,
-        price,
-        rating,
-        warranty_years: warrantyYears,
-        available,
-      },
+        price: Number(price),
+        rating: Number(rating),
+        warranty_years: Number(warrantyYears),
+        available: available === 'true',
+      }),
     };
     dispatch(addProducts(payload));
     setOpen(false);
@@ -130,8 +140,8 @@ function ModalCreate({ open, setOpen }) {
             onChange={(event) => setAvailable(event.target.value)}
             value={available}
           >
-            <MenuItem value={true}>Available</MenuItem>
-            <MenuItem value={false}>Not available</MenuItem>
+            <MenuItem value="true">Available</MenuItem>
+            <MenuItem value="false">Not available</MenuItem>
           </TextField>
         </DialogContent>
         <DialogActions>

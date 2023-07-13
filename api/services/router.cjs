@@ -10,7 +10,7 @@ router.get('/api/products', async (req, res) => {
     const products = await Product.find();
     res.json(products);
   } catch (error) {
-    res.status(500).json({ error: 'Une erreur s\'est produite lors de la récupération des produits.' });
+    res.status(500).json({ error: 'Error when fetching products from database' });
   }
 });
 
@@ -24,7 +24,7 @@ router.get('/api/products/:id', async (req, res) => {
   
     res.json(product);
   } catch (error) {
-    res.status(500).json({ error: 'Une erreur s\'est produite lors de la récupération du produit.' });
+    res.status(500).json({ error: 'Error when fetching the product from database' });
   }
 });
 
@@ -39,7 +39,7 @@ router.post('/api/products', async (req, res) => {
  
     res.json(product);
   } catch (error) {
-    res.status(500).json({ error: 'Une erreur s\'est produite lors de l\'ajout du produit.' });
+    res.status(500).json({ error: 'Error when adding product to the database' });
   }
 });
 
@@ -50,12 +50,12 @@ router.put('/api/products/:id', async (req, res) => {
     const updatedProduct = await Product.findByIdAndUpdate(id, req.body, { new: true });
 
     if (!updatedProduct) {
-      return res.status(404).json({ error: 'Produit non trouvé.' });
+      return res.status(404).json({ error: 'Product not found' });
     }
 
     res.json(updatedProduct);
   } catch (error) {
-    res.status(500).json({ error: 'Une erreur s\'est produite lors de la modification du produit.' });
+    res.status(500).json({ error: 'An error occurred while modifying the product' });
   }
 });
 
@@ -67,15 +67,15 @@ router.delete('/api/products/:id', async (req, res) => {
     // Vérifier si le produit existe
     const product = await Product.findById(id);
     if (!product) {
-      return res.status(404).json({ error: 'Produit non trouvé.' });
+      return res.status(404).json({ error: 'Product not found' });
     }
 
     // Supprimer le produit de la base de données
     await Product.findByIdAndRemove(id);
 
-    res.json({ message: 'Produit supprimé avec succès.' });
+    res.json({ message: 'Product sucessfully deleted' });
   } catch (error) {
-    res.status(500).json({ error: 'Une erreur s\'est produite lors de la suppression du produit.' });
+    res.status(500).json({ error: 'An error occurred while deleting the product.' });
   }
 });
 

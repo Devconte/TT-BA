@@ -37,7 +37,6 @@ router.post('/api/products', async (req, res) => {
     
     const product =  await Product.create(req.body);
  
-    console.log(product)
     res.json(product);
   } catch (error) {
     res.status(500).json({ error: 'Une erreur s\'est produite lors de l\'ajout du produit.' });

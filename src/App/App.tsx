@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react';
-import List from '@mui/material/List';
-
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import { List, Button, Stack, Alert } from '@mui/material';
 
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { fetchProducts } from '../store/reducers/products';
@@ -22,8 +19,17 @@ function App() {
 
   return (
     <>
-      {alert && <p>{alert.message}</p>}
       <h1> Available products</h1>
+      {alert && alert.type === 'error' && (
+        <Stack sx={{ width: '100%', mb: 3 }} spacing={2}>
+          <Alert severity="error">{alert.message}</Alert>
+        </Stack>
+      )}
+      {alert && alert.type === 'success' && (
+        <Stack sx={{ width: '100%', mb: 3 }} spacing={2}>
+          <Alert severity="success">{alert.message}</Alert>
+        </Stack>
+      )}
       <Button variant="contained" onClick={() => setOpenCreate(!openCreate)}>
         Add a product
       </Button>

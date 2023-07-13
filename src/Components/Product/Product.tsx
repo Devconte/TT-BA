@@ -10,9 +10,10 @@ import {
 } from '@mui/material';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import DoNotDisturbAltIcon from '@mui/icons-material/DoNotDisturbAlt';
-import { deleteProducts } from '../../store/reducers/products';
+
 import ModalUpdate from './Modal/ModalUpdate';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { useAppSelector } from '../../hooks/redux';
+import ModalDelete from './Modal/ModalDelete';
 
 interface ProductType {
   _id: string;
@@ -28,17 +29,13 @@ interface ProductState {
 }
 
 function Product() {
-  const [open, setOpen] = useState(false);
-
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const [currentId, setCurrentId] = useState('');
-  const dispatch = useAppDispatch();
+
   const products = useAppSelector(
     (state: ProductState) => state.products.product
   );
-
-  const handleClickDelete = (id: string) => () => {
-    dispatch(deleteProducts(id));
-  };
 
   return (
     <>
@@ -51,11 +48,11 @@ function Product() {
           </ListItemAvatar>
           <Stack spacing={2} direction="row" alignItems="center">
             <Typography noWrap>
-              <p>{item.name}</p>
+              <span>Name : {item.name}</span>
             </Typography>
-            <p>{item.type}</p>
-            <p style={{ width: '50px' }}>{item.price}</p>
-            <p>{item.warranty_years}</p>
+            <span>Type : {item.type}</span>
+            <span style={{ width: '50px' }}>Price : {item.price}</span>
+            <span>Warranty years: {item.warranty_years}</span>
             {item.available ? (
               <Button variant="outlined">Buy</Button>
             ) : (
@@ -66,20 +63,28 @@ function Product() {
             <Button
               variant="outlined"
               onClick={() => {
-                setOpen(!open);
+                setOpenUpdate(!openUpdate);
                 setCurrentId(item._id);
               }}
             >
               Update
             </Button>
-            <Button variant="outlined" onClick={handleClickDelete(item._id)}>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => {
+                setOpenDelete(!openDelete);
+                setCurrentId(item._id);
+              }}
+            >
               Delete
             </Button>
           </Stack>
         </ListItem>
       ))}
 
-      <ModalUpdate open={open} id={currentId} setOpen={setOpen} />
+      <ModalUpdate open={openUpdate} id={currentId} setOpen={setOpenUpdate} />
+      <ModalDelete open={openDelete} id={currentId} setOpen={setOpenDelete} />
     </>
   );
 }

@@ -115,6 +115,9 @@ function ModalUpdate({ open, setOpen, id }: ModalUpdateProps) {
             variant="standard"
             onChange={(event) => setRating(event.target.value)}
             value={rating}
+            inputProps={{
+              max: 5,
+            }}
           />
           <TextField
             autoFocus

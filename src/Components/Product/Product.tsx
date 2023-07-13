@@ -51,6 +51,7 @@ function Product() {
             <InfoText name="Name" data={item.name} />
             <InfoText name="Type" data={item.type} />
             <InfoText name="Price" data={`${item.price} €`} />
+            <InfoText name="Rating" data={`${item.rating} / 5`} />
             <InfoText
               name="Warranty"
               data={`${item.warranty_years} ${

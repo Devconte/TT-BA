@@ -1,6 +1,15 @@
+/* eslint-disable no-nested-ternary */
 import { useEffect, useState } from 'react';
-import { List, Button, Stack, Alert } from '@mui/material';
-
+import {
+  List,
+  Button,
+  Stack,
+  Alert,
+  Snackbar,
+  Typography,
+  Box,
+} from '@mui/material';
+import '@fontsource/roboto/300.css';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { fetchProducts } from '../store/reducers/products';
 import Product from '../Components/Product/Product';
@@ -8,6 +17,7 @@ import ModalCreate from './Modal/ModalCreate';
 
 function App() {
   const [openCreate, setOpenCreate] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
 
   const dispatch = useAppDispatch();
   const alert = useAppSelector((state) => state.products.alert);
@@ -17,30 +27,68 @@ function App() {
     dispatch(fetchProducts());
   }, [dispatch]);
 
+  useEffect(() => {
+    let timer: NodeJS.Timeout | undefined;
+
+    if (alert) {
+      setOpenAlert(true);
+      timer = setTimeout(() => {
+        setOpenAlert(false);
+      }, 3000);
+    }
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [alert]);
+
   return (
-    <>
-      <h1> Available products</h1>
-      {alert && alert.type === 'error' && (
-        <Stack sx={{ width: '100%', mb: 3 }} spacing={2}>
-          <Alert severity="error">{alert.message}</Alert>
-        </Stack>
-      )}
-      {alert && alert.type === 'success' && (
-        <Stack sx={{ width: '100%', mb: 3 }} spacing={2}>
-          <Alert severity="success">{alert.message}</Alert>
-        </Stack>
-      )}
-      <Button variant="contained" onClick={() => setOpenCreate(!openCreate)}>
-        Add a product
-      </Button>
+    <div>
+      <Typography
+        variant="h1"
+        sx={{ textAlign: 'center', mb: 3, fontSize: 50 }}
+      >
+        {' '}
+        Available products
+      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mr: 5 }}>
+        <Button
+          variant="contained"
+          onClick={() => setOpenCreate(!openCreate)}
+          sx={{ mb: 3 }}
+        >
+          Add a product
+        </Button>
+      </Box>
       <List sx={{ width: '100%' }}>
         <Stack spacing={2}>
           {' '}
           <Product />{' '}
         </Stack>
       </List>
+
       <ModalCreate open={openCreate} setOpen={setOpenCreate} />
-    </>
+
+      {/* Handling alerts for user */}
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={3000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+      >
+        <Alert
+          onClose={() => setOpenAlert(false)}
+          severity={
+            alert ? (alert.type === 'success' ? 'success' : 'error') : 'info'
+          }
+          sx={{ width: '100%' }}
+        >
+          {alert && alert.message}
+        </Alert>
+      </Snackbar>
+    </div>
   );
 }
 

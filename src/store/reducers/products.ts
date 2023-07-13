@@ -90,7 +90,10 @@ const productReducer = createReducer(initialState, (builder) => {
       }
     )
     .addCase(fetchProducts.rejected, (state) => {
-      state.alert = { type: 'error', message: 'Problème avec la BDD' };
+      state.alert = {
+        type: 'error',
+        message: 'There was an error fetching products',
+      };
     })
 
     .addCase(
@@ -99,28 +102,46 @@ const productReducer = createReducer(initialState, (builder) => {
         state.product = state.product.filter(
           (product) => product._id !== action.payload
         );
-        state.alert = { type: 'success', message: 'Produit supprimé' };
+        state.alert = { type: 'success', message: 'Product deleted' };
       }
     )
+    .addCase(deleteProducts.rejected, (state) => {
+      state.alert = {
+        type: 'error',
+        message: 'There was en error when removing the product',
+      };
+    })
 
     .addCase(
       updateProducts.fulfilled,
       (state, action: PayloadAction<Product>) => {
-        // Trouver l'indice du produit dans le tableau.
         const index = state.product.findIndex(
           (product) => product._id === action.payload._id
         );
-        // Si le produit existe, le remplacer par le produit mis à jour.
+
         if (index !== -1) {
           state.product[index] = action.payload;
         }
         state.alert = { type: 'success', message: 'Produit mis à jour ' };
       }
     )
+    .addCase(updateProducts.rejected, (state) => {
+      state.alert = {
+        type: 'error',
+        message: 'There was en error when updating the product',
+      };
+    })
 
     .addCase(addProducts.fulfilled, (state, action: PayloadAction<Product>) => {
       state.product = [...state.product, action.payload];
       state.alert = { type: 'success', message: 'Product added to the list' };
+    })
+
+    .addCase(addProducts.rejected, (state) => {
+      state.alert = {
+        type: 'error',
+        message: 'There was en error when adding the product',
+      };
     });
 });
 

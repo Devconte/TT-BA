@@ -52,17 +52,26 @@ const Products = [
 ]
 
 function fillDatabaseFromArr(productsArr) {
-  Product.countDocuments({})
-    .then(count => {
-      if (count === 0) {
+  Product.find({})
+    .then(products => {
+      if (products.length === 0) {
         Product.insertMany(productsArr)
           .then(() => console.log('Database filled with products'))
-          .catch(err => console.log("Error when inserting products in database ", err));
+          .catch(err => console.log("Error when inserting products in the database", err));
+      } else if (products.length !== productsArr.length) {
+        // Check if the length of existing documents is not equal to the length of productsArr
+        Product.deleteMany({})
+          .then(() => {
+            Product.insertMany(productsArr)
+              .then(() => console.log('Database filled with new set of products'))
+              .catch(err => console.log("Error when inserting new set of products in the database", err));
+          })
+          .catch(err => console.log("Error when deleting existing documents", err));
       } else {
-        console.log('Database is operational');
+        console.log('Database is already filled with the same set of products');
       }
     })
-    .catch(err => console.log("Error when counting documents", err));
+    .catch(err => console.log("Error when querying products from the database", err));
 }
 
 fillDatabaseFromArr(Products);

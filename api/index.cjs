@@ -15,6 +15,6 @@ app.use(router);
 
 // Démarrer le serveur
 app.listen(3000, () => {
-  console.log('Le serveur est en écoute sur le port 3000...');
+  console.log('Server listening on port 3000...');
 });
 

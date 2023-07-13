@@ -44,4 +44,28 @@ productSchema.pre('save', function(next) {
 // Vérifier si le modèle existe déjà avant de le compiler
 const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
 
+const Products = [
+  { "_id" : 1, "name" : "AC1 Phone1", "type" : "phone", "price" : 200.05, "rating" : 3.8,"warranty_years" : 1, "available" : true },
+  { "_id" : 2, "name" : "AC2 Phone2", "type" : "phone", "price" : 147.21, "rating" : 1,"warranty_years" : 3, "available" : false },
+  { "_id" : 3, "name" : "AC3 Phone3", "type" : "phone", "price" : 150, "rating" : 2,"warranty_years" : 1, "available" : true },
+  { "_id" : 4, "name" : "AC4 Phone4", "type" : "phone", "price" : 50.20, "rating" : 3,"warranty_years" : 2, "available" : true }
+]
+
+function fillDatabaseFromArr(productsArr) {
+  Product.countDocuments({})
+    .then(count => {
+      if (count === 0) {
+        Product.insertMany(productsArr)
+          .then(() => console.log('Database filled with products'))
+          .catch(err => console.log("Error when inserting products in database ", err));
+      } else {
+        console.log('Database is operational');
+      }
+    })
+    .catch(err => console.log("Error when counting documents", err));
+}
+
+fillDatabaseFromArr(Products);
+
+
 module.exports = Product;

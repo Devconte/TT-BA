@@ -98,7 +98,7 @@ function ModalUpdate({ open, setOpen, id }: ModalUpdateProps) {
             autoFocus
             margin="dense"
             id="price"
-            label="price"
+            label="Price"
             type="number"
             fullWidth
             variant="standard"

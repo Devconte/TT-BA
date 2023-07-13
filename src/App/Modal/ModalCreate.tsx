@@ -101,7 +101,7 @@ function ModalCreate({ open, setOpen }: ModalCreateProps) {
             autoFocus
             margin="dense"
             id="price"
-            label="price"
+            label="Price"
             type="number"
             fullWidth
             variant="standard"

@@ -14,6 +14,7 @@ import DoNotDisturbAltIcon from '@mui/icons-material/DoNotDisturbAlt';
 import ModalUpdate from './Modal/ModalUpdate';
 import { useAppSelector } from '../../hooks/redux';
 import ModalDelete from './Modal/ModalDelete';
+import InfoText from '../InfoText/InfoText';
 
 interface ProductType {
   _id: string;
@@ -47,12 +48,16 @@ function Product() {
             </Avatar>
           </ListItemAvatar>
           <Stack spacing={2} direction="row" alignItems="center">
-            <Typography noWrap>
-              <span>Name : {item.name}</span>
-            </Typography>
-            <span>Type : {item.type}</span>
-            <span style={{ width: '50px' }}>Price : {item.price}</span>
-            <span>Warranty years: {item.warranty_years}</span>
+            <InfoText name="Name" data={item.name} />
+            <InfoText name="Type" data={item.type} />
+            <InfoText name="Price" data={`${item.price} €`} />
+            <InfoText
+              name="Warranty"
+              data={`${item.warranty_years} ${
+                item.warranty_years > 1 ? 'years' : 'year'
+              }`}
+            />
+
             {item.available ? (
               <Button variant="outlined">Buy</Button>
             ) : (

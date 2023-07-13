@@ -1,4 +1,6 @@
 import { Typography } from '@mui/material';
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/700.css';
 
 interface PropsInfo {
   name: string;
@@ -9,13 +11,21 @@ function InfoText({ name, data }: PropsInfo) {
   return (
     <div>
       <Typography
-        sx={{ textTransform: 'uppercase', mb: 1.5 }}
+        sx={{
+          textTransform: 'uppercase',
+          mb: 1,
+          fontFamily: 'Roboto',
+          fontWeight: 500,
+        }}
         variant="inherit"
         component="p"
       >
         <b>{name}</b>
       </Typography>
-      <span> {data}</span>
+      <Typography component="span" sx={{ fontFamily: 'Roboto', fontSize: 15 }}>
+        {' '}
+        {data}
+      </Typography>
     </div>
   );
 }
